@@ -1,53 +1,262 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-    </head>
+    <meta charset="UTF-8">
+    <title>E-Card 官方下载</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#ffffff">
+    <style>
+        /* --- 基础重置 --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f6f7;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* --- 容器卡片 --- */
+        .card {
+            background: #fff;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 16px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* --- App 图标与头部 --- */
+        .app-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); /* 这里的渐变色可以换成你的App Logo图片 */
+            border-radius: 16px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #fff;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 150, 255, 0.2);
+        }
+        
+        .app-name { font-size: 20px; font-weight: 700; color: #1f2937; margin-bottom: 5px; }
+        
+        /* --- 版本信息元数据 --- */
+        .meta-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+        .meta-item { background: #f3f4f6; padding: 4px 10px; border-radius: 6px; }
+
+        /* --- 更新日志区域 --- */
+        .log-box {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: left;
+            margin-bottom: 25px;
+        }
+        .log-title { font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 8px; }
+        .log-content { font-size: 13px; color: #4b5563; line-height: 1.6; white-space: pre-wrap; }
+
+        /* --- 进度条 --- */
+        .progress-area { margin-bottom: 25px; }
+        .status-text { font-size: 14px; color: #2563eb; font-weight: 600; margin-bottom: 10px; height: 20px; }
+        .progress-track { width: 100%; height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; }
+        .progress-bar { width: 0%; height: 100%; background: #2563eb; transition: width 0.1s linear; border-radius: 3px; }
+
+        /* --- 大按钮 --- */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            text-decoration: none;
+            border: none;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            transition: transform 0.1s;
+        }
+        .btn:active { transform: scale(0.98); }
+
+        /* --- 底部提示 --- */
+        .tips { margin-top: 25px; font-size: 12px; color: #9ca3af; line-height: 1.5; text-align: left; }
+        .tips strong { color: #d97706; }
+
+        /* --- 微信遮罩 --- */
+        #wx-mask {
+            display: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 999;
+            color: #fff;
+            text-align: center;
+            padding-top: 80px;
+        }
+
+        /* --- 错误提示 --- */
+        #error-msg { color: #ef4444; font-size: 14px; margin-top: 15px; display: none; }
+    </style>
+</head>
 <body>
-    <div id="status-message">
-        <h1>正在获取最新版本信息...</h1>
-        <div class="spinner"></div> 
-        <p>请等待加载完成，然后点击下方按钮开始下载。</p>
+
+    <div id="wx-mask">
+        <div style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">↗️ 点击右上角</div>
+        <div style="font-size: 16px;">选择“在浏览器打开”以安装</div>
+    </div>
+
+    <div class="card">
+        <div class="app-icon">E</div>
+        
+        <div class="app-name">E-Card</div>
+        
+        <div class="meta-row" id="meta-info">
+            <span class="meta-item">版本: ...</span>
+            <span class="meta-item">大小: ...</span>
+        </div>
+
+        <div class="log-box">
+            <div class="log-title">📢 更新内容</div>
+            <div class="log-content" id="log-text">正在获取更新信息...</div>
+        </div>
+
+        <div class="progress-area">
+            <div class="status-text" id="status-text">正在连接服务器...</div>
+            <div class="progress-track">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <a href="javascript:;" class="btn" id="download-btn">手动点击下载</a>
+
+        <div id="error-msg"></div>
+
+        <div class="tips">
+            <strong>⚠️ Chrome 安装必读：</strong><br>
+            1. 点击下载后，如果浏览器提示“文件可能有害”，请务必选择 <strong>“仍然下载”</strong> 或 <strong>“保留”</strong>。<br>
+            2. 本次更新文件较大 (200MB+)，请保持网络通畅。
+        </div>
     </div>
 
     <script>
-        const JSON_URL = 'update_version.json'; 
+        // 配置
+        const JSON_URL = 'update_version.json';
+        const TOTAL_SECONDS = 3.0; // 倒计时秒数
+        
+        // DOM 元素
+        const els = {
+            metaInfo: document.getElementById('meta-info'),
+            logText: document.getElementById('log-text'),
+            statusText: document.getElementById('status-text'),
+            progressBar: document.getElementById('progress-bar'),
+            btn: document.getElementById('download-btn'),
+            error: document.getElementById('error-msg')
+        };
 
-        // 获取并解析 JSON
-        fetch(JSON_URL, { cache: "no-store" })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`网络请求失败，状态码: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                const latestDownloadUrl = data.url; 
+        // 1. 微信/QQ 环境检测
+        const ua = navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == "micromessenger" || ua.match(/QQ/i) == "qq") {
+            document.getElementById('wx-mask').style.display = 'block';
+        } else {
+            // 开始流程
+            init();
+        }
+
+        function init() {
+            // 添加时间戳防止 JSON 缓存
+            fetch(JSON_URL + '?t=' + new Date().getTime())
+                .then(res => {
+                    if (!res.ok) throw new Error("配置文件读取失败");
+                    return res.json();
+                })
+                .then(data => {
+                    renderData(data);
+                    startCountdown(data.url);
+                })
+                .catch(err => {
+                    showError("获取版本信息失败，请检查网络");
+                    console.error(err);
+                });
+        }
+
+        function renderData(data) {
+            // 填充 JSON 数据到页面
+            // 1. 版本和大小
+            els.metaInfo.innerHTML = `
+                <span class="meta-item">${data.versionName}</span>
+                <span class="meta-item">${data.pkgSize}</span>
+                <span class="meta-item">${data.updateDate.split(' ')[0]}</span>
+            `;
+            
+            // 2. 更新日志
+            els.logText.innerText = data.updateMessage || "暂无详细日志";
+
+            // 3. 绑定按钮链接
+            els.btn.href = data.url;
+        }
+
+        function startCountdown(url) {
+            let timeLeft = TOTAL_SECONDS;
+            
+            const timer = setInterval(() => {
+                timeLeft -= 0.1;
                 
-                if (latestDownloadUrl && latestDownloadUrl.startsWith('http')) {
-                    // *** 【关键修改】 ***
-                    // 成功获取到 URL，更新页面内容，显示下载按钮
-                    document.getElementById('status-message').innerHTML = `
-                        <h1>已准备就绪！</h1>
-                        <p>应用版本: ${data.versionName} (${data.versionCode})</p>
-                        <p>文件大小: ${data.pkgSize} KB</p>
-                        
-                        <a class="btn" href="${latestDownloadUrl}">
-                            点击下载最新版本 APK
-                        </a>
-                        
-                        <p style="margin-top: 20px; color: gray;">
-                           下载前，您可能需要授予浏览器下载权限。
-                        </p>
-                    `;
-                    // *** 【关键修改结束】 ***
-                    
+                // 计算进度百分比
+                const percent = ((TOTAL_SECONDS - timeLeft) / TOTAL_SECONDS) * 100;
+                els.progressBar.style.width = Math.min(percent, 100) + "%";
+
+                if (timeLeft > 0) {
+                    // 更新文字提示
+                    if (timeLeft < 2.0) els.statusText.innerText = "即将开始下载...";
+                    else els.statusText.innerText = `正在建立安全连接 (${Math.ceil(timeLeft)}s)`;
                 } else {
-                    throw new Error("JSON数据无效或缺少有效的下载URL。");
+                    // 倒计时结束
+                    clearInterval(timer);
+                    els.statusText.innerText = "下载请求已发送";
+                    els.statusText.style.color = "#059669"; // 绿色
+                    
+                    // 触发自动下载
+                    triggerDownload(url);
                 }
-            })
-            .catch(error => {
-                // ... (错误处理逻辑保持不变) ...
-            });
+            }, 100);
+        }
+
+        function triggerDownload(url) {
+            // 使用 location.href 兼容性最好
+            window.location.href = url;
+
+            // 1.5秒后提示用户手动点击（防止自动下载被拦截后用户不知道怎么办）
+            setTimeout(() => {
+                els.statusText.innerText = "如果未自动开始，请点击下方按钮";
+                els.statusText.style.color = "#d97706"; // 橙色
+            }, 1500);
+        }
+
+        function showError(msg) {
+            els.statusText.style.display = 'none';
+            els.progressBar.parentElement.style.display = 'none';
+            els.error.style.display = 'block';
+            els.error.innerText = msg;
+            els.btn.innerText = "暂不可用";
+            els.btn.removeAttribute('href');
+            els.btn.style.background = "#9ca3af";
+        }
     </script>
 </body>
 </html>
