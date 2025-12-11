@@ -2,39 +2,104 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>应用下载中...</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>应用下载与更新</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <style>
-        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            text-align: center; 
+            padding: 50px 20px; 
+            background-color: #f4f4f9; 
+            color: #333;
+        }
+        h1 { 
+            color: #1a73e8; /* 类似 Chrome 主题的颜色 */
+            margin-bottom: 20px;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #1a73e8;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error {
+            color: #d93025; /* 错误颜色 */
+            font-weight: bold;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #1a73e8;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
-    <h1>正在检查最新版本并自动下载...</h1>
-    <p>如果下载没有自动开始，请稍候。</p>
+    <div id="status-message">
+        <h1>正在获取最新版本信息...</h1>
+        <div class="spinner"></div>
+        <p>下载将在片刻后自动开始。</p>
+    </div>
 
     <script>
+        // 假设 version_info.json 在同一目录下
         const JSON_URL = 'update_version.json'; 
 
-        fetch(JSON_URL)
+        // 核心重定向逻辑
+        function redirectToApk(url) {
+            // 使用 window.location.href 触发下载，这是最兼容的方式
+            window.location.href = url; 
+            
+            // 在某些较旧的浏览器或网络慢的情况下，自动下载可能需要时间。
+            // 提醒用户如果下载未开始可以手动点击。
+            document.getElementById('status-message').innerHTML = `
+                <h1>下载已开始！</h1>
+                <p>如果您的下载没有在几秒钟内开始，请点击下方链接手动下载：</p>
+                <a class="btn" href="${url}">立即手动下载</a>
+            `;
+        }
+
+        // 获取并解析 JSON
+        fetch(JSON_URL, { cache: "no-store" }) // 禁用缓存，确保获取最新 JSON
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('网络请求错误 ' + response.statusText);
+                    // 如果状态码不是 200-299 范围，抛出错误
+                    throw new Error(`网络请求失败，状态码: ${response.status}`);
                 }
                 return response.json();
             })
             .then(data => {
-                const latestDownloadUrl = data.url; 
+                const latestDownloadUrl = data.url; // 使用你的 JSON 字段名 'url'
                 
-                if (latestDownloadUrl) {
-                    
-                    window.location.href = latestDownloadUrl; 
+                if (latestDownloadUrl && latestDownloadUrl.startsWith('http')) {
+                    // 成功获取到有效的 URL，执行重定向
+                    redirectToApk(latestDownloadUrl); 
                 } else {
-                    document.querySelector('h1').textContent = '未找到下载链接';
+                    throw new Error("JSON数据无效或缺少有效的下载URL。");
                 }
             })
             .catch(error => {
-                document.querySelector('h1').textContent = '更新检查失败，请稍后重试。';
-                console.error('获取版本信息失败:', error);
+                console.error('更新检查失败:', error);
+                // 错误处理，向用户显示清晰的错误信息
+                document.getElementById('status-message').innerHTML = `
+                    <h1 class="error">无法加载更新信息</h1>
+                    <p class="error">我们未能获取最新版本信息，请稍后重试或联系管理员。</p>
+                    <p>错误详情: ${error.message}</p>
+                `;
             });
     </script>
 </body>
