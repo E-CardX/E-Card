@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>应用下载中...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+    </style>
+</head>
+<body>
+    <h1>正在检查最新版本并自动下载...</h1>
+    <p>如果下载没有自动开始，请稍候。</p>
+
+    <script>
+        const JSON_URL = 'version_info.json'; 
+
+        fetch(JSON_URL)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('网络请求错误 ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const latestDownloadUrl = data.downloadUrl; 
+                
+                if (latestDownloadUrl) {
+                    
+                    window.location.href = latestDownloadUrl; 
+                } else {
+                    document.querySelector('h1').textContent = '未找到下载链接';
+                }
+            })
+            .catch(error => {
+                document.querySelector('h1').textContent = '更新检查失败，请稍后重试。';
+                console.error('获取版本信息失败:', error);
+            });
+    </script>
+</body>
+</html>
