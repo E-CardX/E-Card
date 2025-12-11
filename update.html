@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <title>E-Card 官方下载</title>
@@ -31,20 +31,24 @@
             margin-top: 20px;
         }
 
-        /* --- App 图标与头部 --- */
+        /* --- App 图标 (已更新) --- */
         .app-icon {
             width: 72px;
             height: 72px;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); /* 这里的渐变色可以换成你的App Logo图片 */
+            /* 移除原来的背景渐变，改用 overflow: hidden 来确保图片适应圆角 */
             border-radius: 16px;
             margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            color: #fff;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0, 150, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 调整阴影颜色使其更自然 */
+            overflow: hidden; /* 关键：确保图片不会超出圆角边界 */
+            position: relative;
+        }
+
+        /* 新增：让图片充满容器 */
+        .app-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
         
         .app-name { font-size: 20px; font-weight: 700; color: #1f2937; margin-bottom: 5px; }
@@ -122,7 +126,9 @@
     </div>
 
     <div class="card">
-        <div class="app-icon">E</div>
+        <div class="app-icon">
+            <img src="image_0.png" alt="E-Card Logo">
+        </div>
         
         <div class="app-name">E-Card</div>
         
