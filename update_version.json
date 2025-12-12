@@ -1,9 +1,9 @@
 {
         "updateDate": "2025-12-11 10:00:00",
         "isForce": false,
-        "versionName": "v1.0.0",
+        "versionName": "v1.0.2",
         "url": "https://github.com/E-CardX/E-Card/releases/download/V1.0.2/ECard-V1.0.0.2_202512120930-release.apk",
-        "updateMessage": "The first version has been officially released.",
-        "versionCode": 100,
+        "updateMessage": "test upgrade",
+        "versionCode": 221,
         "pkgSize": 2567
  }
