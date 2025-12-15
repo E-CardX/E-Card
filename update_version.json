@@ -3,7 +3,7 @@
         "isForce": false,
         "versionName": "v1.0.0.5",
         "url": "https://github.com/E-CardX/E-Card/releases/download/V1.0.2/ECard-V1.0.0.5_202512151431-release.apk",
-        "updateMessage": "test upgrade",
+        "updateMessage": "1、Fix some bugs\n2、Application self upgrading function\n3、Optimize user experience",
         "versionCode": 220,
         "pkgSize": 2567
  }
