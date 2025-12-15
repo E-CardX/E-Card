@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>E-Card 官方下载</title>
+    <title>E-Card Official Download</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#ffffff">
     <style>
-        /* --- 基础重置 --- */
+        /* --- Base Reset --- */
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -19,7 +19,7 @@
             padding: 20px;
         }
 
-        /* --- 容器卡片 --- */
+        /* --- Container Card --- */
         .card {
             background: #fff;
             width: 100%;
@@ -31,19 +31,19 @@
             margin-top: 20px;
         }
 
-        /* --- App 图标 (已更新) --- */
+        /* --- App Icon (Updated) --- */
         .app-icon {
             width: 72px;
             height: 72px;
-            /* 移除原来的背景渐变，改用 overflow: hidden 来确保图片适应圆角 */
+            /* Removed the original background gradient, using overflow: hidden to ensure the image adapts to the rounded corners */
             border-radius: 16px;
             margin: 0 auto 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 调整阴影颜色使其更自然 */
-            overflow: hidden; /* 关键：确保图片不会超出圆角边界 */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Adjusted shadow to look more natural */
+            overflow: hidden; /* Key: ensure the image doesn't exceed the rounded boundaries */
             position: relative;
         }
 
-        /* 新增：让图片充满容器 */
+        /* New: Make the image fill the container */
         .app-icon img {
             width: 100%;
             height: 100%;
@@ -53,7 +53,7 @@
         
         .app-name { font-size: 20px; font-weight: 700; color: #1f2937; margin-bottom: 5px; }
         
-        /* --- 版本信息元数据 --- */
+        /* --- Version Info Metadata --- */
         .meta-row {
             display: flex;
             justify-content: center;
@@ -64,7 +64,7 @@
         }
         .meta-item { background: #f3f4f6; padding: 4px 10px; border-radius: 6px; }
 
-        /* --- 更新日志区域 --- */
+        /* --- Update Log Area --- */
         .log-box {
             background: #f9fafb;
             border: 1px solid #e5e7eb;
@@ -76,13 +76,13 @@
         .log-title { font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 8px; }
         .log-content { font-size: 13px; color: #4b5563; line-height: 1.6; white-space: pre-wrap; }
 
-        /* --- 进度条 --- */
+        /* --- Progress Bar --- */
         .progress-area { margin-bottom: 25px; }
         .status-text { font-size: 14px; color: #2563eb; font-weight: 600; margin-bottom: 10px; height: 20px; }
         .progress-track { width: 100%; height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; }
         .progress-bar { width: 0%; height: 100%; background: #2563eb; transition: width 0.1s linear; border-radius: 3px; }
 
-        /* --- 大按钮 --- */
+        /* --- Large Button --- */
         .btn {
             display: block;
             width: 100%;
@@ -99,11 +99,11 @@
         }
         .btn:active { transform: scale(0.98); }
 
-        /* --- 底部提示 --- */
+        /* --- Bottom Tip --- */
         .tips { margin-top: 25px; font-size: 12px; color: #9ca3af; line-height: 1.5; text-align: left; }
         .tips strong { color: #d97706; }
 
-        /* --- 微信遮罩 --- */
+        /* --- WeChat Mask --- */
         #wx-mask {
             display: none;
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -114,15 +114,15 @@
             padding-top: 80px;
         }
 
-        /* --- 错误提示 --- */
+        /* --- Error Message --- */
         #error-msg { color: #ef4444; font-size: 14px; margin-top: 15px; display: none; }
     </style>
 </head>
 <body>
 
     <div id="wx-mask">
-        <div style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">↗️ 点击右上角</div>
-        <div style="font-size: 16px;">选择“在浏览器打开”以安装</div>
+        <div style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">↗️ Click the top right corner</div>
+        <div style="font-size: 16px;">Select "Open in Browser" to install</div>
     </div>
 
     <div class="card">
@@ -133,39 +133,39 @@
         <div class="app-name">E-Card</div>
         
         <div class="meta-row" id="meta-info">
-            <span class="meta-item">版本: ...</span>
-            <span class="meta-item">大小: ...</span>
+            <span class="meta-item">Version: ...</span>
+            <span class="meta-item">Size: ...</span>
         </div>
 
         <div class="log-box">
-            <div class="log-title">📢 更新内容</div>
-            <div class="log-content" id="log-text">正在获取更新信息...</div>
+            <div class="log-title">📢 Release Notes</div>
+            <div class="log-content" id="log-text">Fetching update information...</div>
         </div>
 
         <div class="progress-area">
-            <div class="status-text" id="status-text">正在连接服务器...</div>
+            <div class="status-text" id="status-text">Connecting to server...</div>
             <div class="progress-track">
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
         </div>
 
-        <a href="javascript:;" class="btn" id="download-btn">手动点击下载</a>
+        <a href="javascript:;" class="btn" id="download-btn">Manual Download</a>
 
         <div id="error-msg"></div>
 
         <div class="tips">
-            <strong>⚠️ Chrome 安装必读：</strong><br>
-            1. 点击下载后，如果浏览器提示“文件可能有害”，请务必选择 <strong>“仍然下载”</strong> 或 <strong>“保留”</strong>。<br>
-            2. 本次更新文件较大 (200MB+)，请保持网络通畅。
+            <strong>⚠️ Important for Chrome Installation:</strong><br>
+            1. After clicking download, if the browser warns "File might be harmful", please select <strong>"Download Anyway"</strong> or <strong>"Keep"</strong>.<br>
+            2. This update file is large (200MB+), please ensure your network connection is stable.
         </div>
     </div>
 
     <script>
-        // 配置
+        // Configuration
         const JSON_URL = 'update_version.json';
-        const TOTAL_SECONDS = 3.0; // 倒计时秒数
+        const TOTAL_SECONDS = 3.0; // Countdown in seconds
         
-        // DOM 元素
+        // DOM Elements
         const els = {
             metaInfo: document.getElementById('meta-info'),
             logText: document.getElementById('log-text'),
@@ -175,20 +175,20 @@
             error: document.getElementById('error-msg')
         };
 
-        // 1. 微信/QQ 环境检测
+        // 1. WeChat/QQ Environment Check
         const ua = navigator.userAgent.toLowerCase();
         if (ua.match(/MicroMessenger/i) == "micromessenger" || ua.match(/QQ/i) == "qq") {
             document.getElementById('wx-mask').style.display = 'block';
         } else {
-            // 开始流程
+            // Start the process
             init();
         }
 
         function init() {
-            // 添加时间戳防止 JSON 缓存
+            // Append timestamp to prevent JSON caching
             fetch(JSON_URL + '?t=' + new Date().getTime())
                 .then(res => {
-                    if (!res.ok) throw new Error("配置文件读取失败");
+                    if (!res.ok) throw new Error("Configuration file read failed");
                     return res.json();
                 })
                 .then(data => {
@@ -196,24 +196,24 @@
                     startCountdown(data.url);
                 })
                 .catch(err => {
-                    showError("获取版本信息失败，请检查网络");
+                    showError("Failed to fetch version info, please check your network");
                     console.error(err);
                 });
         }
 
         function renderData(data) {
-            // 填充 JSON 数据到页面
-            // 1. 版本和大小
+            // Populate JSON data into the page
+            // 1. Version and Size
             els.metaInfo.innerHTML = `
                 <span class="meta-item">${data.versionName}</span>
                 <span class="meta-item">${data.pkgSize}</span>
                 <span class="meta-item">${data.updateDate.split(' ')[0]}</span>
             `;
             
-            // 2. 更新日志
-            els.logText.innerText = data.updateMessage || "暂无详细日志";
+            // 2. Update Log
+            els.logText.innerText = data.updateMessage || "No detailed log available";
 
-            // 3. 绑定按钮链接
+            // 3. Bind button link
             els.btn.href = data.url;
         }
 
@@ -223,34 +223,34 @@
             const timer = setInterval(() => {
                 timeLeft -= 0.1;
                 
-                // 计算进度百分比
+                // Calculate progress percentage
                 const percent = ((TOTAL_SECONDS - timeLeft) / TOTAL_SECONDS) * 100;
                 els.progressBar.style.width = Math.min(percent, 100) + "%";
 
                 if (timeLeft > 0) {
-                    // 更新文字提示
-                    if (timeLeft < 2.0) els.statusText.innerText = "即将开始下载...";
-                    else els.statusText.innerText = `正在建立安全连接 (${Math.ceil(timeLeft)}s)`;
+                    // Update text prompt
+                    if (timeLeft < 2.0) els.statusText.innerText = "Initiating download...";
+                    else els.statusText.innerText = `Establishing secure connection (${Math.ceil(timeLeft)}s)`;
                 } else {
-                    // 倒计时结束
+                    // Countdown finished
                     clearInterval(timer);
-                    els.statusText.innerText = "下载请求已发送";
-                    els.statusText.style.color = "#059669"; // 绿色
+                    els.statusText.innerText = "Download request sent";
+                    els.statusText.style.color = "#059669"; // Green
                     
-                    // 触发自动下载
+                    // Trigger automatic download
                     triggerDownload(url);
                 }
             }, 100);
         }
 
         function triggerDownload(url) {
-            // 使用 location.href 兼容性最好
+            // location.href has the best compatibility
             window.location.href = url;
 
-            // 1.5秒后提示用户手动点击（防止自动下载被拦截后用户不知道怎么办）
+            // Prompt user for manual click after 1.5 seconds (in case auto-download is blocked)
             setTimeout(() => {
-                els.statusText.innerText = "如果未自动开始，请点击下方按钮";
-                els.statusText.style.color = "#d97706"; // 橙色
+                els.statusText.innerText = "If download doesn't start automatically, please click the button below";
+                els.statusText.style.color = "#d97706"; // Orange
             }, 1500);
         }
 
@@ -259,7 +259,7 @@
             els.progressBar.parentElement.style.display = 'none';
             els.error.style.display = 'block';
             els.error.innerText = msg;
-            els.btn.innerText = "暂不可用";
+            els.btn.innerText = "Currently Unavailable";
             els.btn.removeAttribute('href');
             els.btn.style.background = "#9ca3af";
         }
